@@ -1,0 +1,40 @@
+#+TITLE: quick-find.el
+
+Tiny framework to facilitate quickly jumping to custom-defined directories
+(both locally and remote locations).
+
+Define names and corresponding directories as follows:
+
+#+BEGIN_SRC emacs-lisp
+(setq quick-find-name2dir '(("emacs.d" . "~/.emacs.d")
+                            ("home" . "~/")
+                            ("remote/hostname" . "/ssh:<user>@<hostname>:/home/<user>/")))
+#+END_SRC
+
+The following two interactive functions are defined:
+* =quick-find-file=
+Prompts you with a list of names (as defined in =quick-find-name2dir=) to
+choose from, and runs =find-file= in the directory corresponding to the chosen
+name.
+
+* =quick-find-file-as-root=
+Prompts you with a list of names (as defined in =quick-find-name2dir=) to
+choose from, and runs =find-file= in the directory corresponding to the chosen
+name but with a prefix so that any file you open is opened as root.
+
+* setting up
+Clone this repo in =~/.emacs.d/=
+#+BEGIN_SRC sh
+git clone https://github.com/paulodder/quick-find-el
+#+END_SRC
+Add path to that repo to your =load-path= variable
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/quick-find-el")
+(require quick-find)
+#+END_SRC
+
+* key-bindings
+I chose the following key-bindings, but see what works for you
+| =quick-find-file=         | =C-x C-j=   |
+| =quick-find-file-as-root= | =C-x C-M-j= |
+
