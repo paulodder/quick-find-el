@@ -21,6 +21,8 @@ name.
 Prompts you with a list of names (as defined in =quick-find-name2dir=) to
 choose from, and runs =find-file= in the directory corresponding to the chosen
 name but with a prefix so that any file you open is opened as root.
+* =quick-find-shell=
+Open new shell in chosen directory.
 
 * setting up
 Clone this repo in =~/.emacs.d/=

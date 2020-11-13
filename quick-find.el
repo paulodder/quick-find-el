@@ -1,11 +1,5 @@
 (defcustom quick-find-name2dir '(("emacs.d" . "~/.emacs.d")
-                                 ("remote/fxr" . "/ssh:paul@168.119.165.84:/home/paul/")
-                                 ("remote/plekje-sfs" . "/ssh:paul@37.97.145.128:/home/paul/")
-                                 ("remote/lodder.dev" . "/ssh:paul@lodder.dev:/home/paul/")
-                                 ("remote/lisa-dl" . "/ssh:lgpu0347@lisa.surfsara.nl:/home/lgpu0347/")
-                                 ("dl" . "~/courses/dl/")
-                                 ("dl/ass1" . "~/courses/dl/assignments/assignment_1/1_mlp_cnn/")
-                                 ("nlp" . "~/courses/nlp1/"))
+                                 ("home" . "~"))
   "Assocation list of display names with corresponding directory path")
 
 (defun quick-find--sudoify-local (path)
@@ -34,22 +28,38 @@
       (quick-find--sudoify-remote path)
     (quick-find--sudoify-local path)))
 
+(defun quick-find--choose-name (&optional as-root)
+  (let* ((quick-find-names (seq-map 'car quick-find-name2dir)))
+    (completing-read "Choose: " quick-find-names)))
+
+
+(defun quick-find--get-dir-for-name (name)
+  (cdr (assoc chosen-name quick-find-name2dir)))
 
 (defun quick-find--choose-dir (&optional as-root)
-  (let* ((quick-find-names (seq-map 'car quick-find-name2dir))
-         (chosen-name (completing-read "Choose: " quick-find-names))
-         (chosen-dir (cdr (assoc chosen-name quick-find-name2dir))))
+  (let* ((chosen-name (quick-find--choose-name))
+         (chosen-dir (quick-find--get-dir-for-name chosen-name)))
     (if as-root
         (quick-find--sudoify chosen-dir)
       chosen-dir)))
 
-
+(defun quick-find--get-shell-name (name)
+  (concat "shell-" name))
 
 (defun quick-find-file (&optional as-root)
   (interactive)
   (let* ((chosen-dir (quick-find--choose-dir as-root))
          (default-directory chosen-dir))
     (call-interactively 'find-file)))
+
+
+
+(defun quick-find-shell (&optional as-root)
+  (interactive)
+  (let* ((chosen-name (quick-find--choose-name as-root))
+         (chosen-dir (quick-find--get-dir-for-name chosen-name))
+         (default-directory chosen-dir))
+    (shell (quick-find--get-shell-name chosen-name))))
 
 (defun quick-find-file-as-root ()
   (interactive)
