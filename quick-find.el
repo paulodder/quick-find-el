@@ -3,14 +3,8 @@
   "Assocation list of display names with corresponding directory path")
 
 (defun quick-find--sudoify-local (path)
-  (let* ((tramp-fname (make-tramp-file-name :user "root"
-                                            :domain (system-name))))
-    (concat "/sudo:"
-            (tramp-file-name-user tramp-fname)
-            "@"
-            (tramp-file-name-domain tramp-fname)
-            ":"
-            (expand-file-name path))))
+  (concat "/sudo:root@localhost:"
+          (expand-file-name path)))
 
 (defun quick-find--sudoify-remote (path)
   (let ((tramp-fname (tramp-dissect-file-name path)))
